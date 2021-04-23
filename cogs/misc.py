@@ -9,7 +9,7 @@ class Miscellaneous(commands.Cog, name='Miscellaneous'):
     @commands.command(name='choice')
     async def random_choice(self, ctx, *, arg):
         """Gives you a random choice
-        to choose ?choice options split by '|'
+        To choose: ?choice options split by '|'
         ex. ?choice hey|hello"""
         options = arg.split('|')
 
@@ -24,3 +24,24 @@ class Miscellaneous(commands.Cog, name='Miscellaneous'):
     async def random_choice_error(self, ctx, error):
      if isinstance(error, commands.errors.MissingRequiredArgument):
         await ctx.send("need more options")
+        
+    
+    @commands.command(name='say')
+    async def say(self, ctx, *, echo_message):
+        await ctx.send(f'{ctx.author.mention}, {echo_message}')
+        
+    @say.error
+    async def say_error(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRequiredArgument):
+            await ctx.send("need something to echo")
+            
+            
+    @commands.command(name='poke')
+    async def poke(self, ctx, poke_member: discord.Member):
+        await ctx.send(f"{ctx.author.display_name} pokes {poke_member.mention}")
+        
+    @poke.error
+    async def poke_error(self, ctx, error):
+        if isinstance(error, commands.BadArgument):
+            await ctx.send('Couldnt find that member')
+            
