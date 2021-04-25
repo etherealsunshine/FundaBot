@@ -1,6 +1,7 @@
 import discord
 import random
 from discord.ext import commands
+from discord.ext.commands.cooldowns import BucketType
 
 class Miscellaneous(commands.Cog, name='Miscellaneous'):
     def __init__(self, bot):
@@ -37,6 +38,7 @@ class Miscellaneous(commands.Cog, name='Miscellaneous'):
             
             
     @commands.command(name='poke')
+    @commands.cooldown(1, 60, BucketType.member)
     async def poke(self, ctx, poke_member: discord.Member):
         await ctx.send(f"{ctx.author.display_name} pokes {poke_member.mention}")
         
@@ -45,3 +47,5 @@ class Miscellaneous(commands.Cog, name='Miscellaneous'):
         if isinstance(error, commands.BadArgument):
             await ctx.send('Couldnt find that member')
             
+def setup(bot):
+    bot.add_cog(Miscellaneous(bot))
