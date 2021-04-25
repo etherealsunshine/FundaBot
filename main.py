@@ -1,8 +1,8 @@
 import discord
 from discord.ext import commands, tasks
 import json
-
-from cogs import translate, misc
+import os, sys
+import traceback
 
 description = '''
 A bot dedicated to helping the members of the Fundamics community
@@ -16,8 +16,11 @@ with open("config.json", "r") as file:
 
 client = commands.Bot(command_prefix=commands.when_mentioned_or("-"), description=description,intents=intents)
 
-client.add_cog(translate.Translate(client))
-client.add_cog(misc.Miscellaneous(client))
+for filename in os.listdir('./cogs'):
+    if filename.endswith('.py'):
+        client.load_extension(f'cogs.{filename[:-3]}')
+    else:
+        print(f'Unable to load {filename[:-3]}')
 
 @tasks.loop(minutes=1)
 async def get_member_count():
@@ -35,6 +38,27 @@ async def on_ready():
     print('Logged in as')
     print(client.user.name + "#" + client.user.discriminator)
     print('------')
+    
+@client.event
+async def on_command_error(ctx, exception):
+        command = ctx.command
+        if command and command.has_error_handler():
+            return
+    
+        if isinstance(exception, commands.NoPrivateMessage):
+            await ctx.author.send('This command cannot be used in private messages.')
+        elif isinstance(exception, commands.DisabledCommand):
+            await ctx.author.send('Sorry. This command is disabled and cannot be used.')
+        elif isinstance(exception, commands.CommandInvokeError):
+            original = exception.original
+            if not isinstance(original, discord.HTTPException):
+                print(f'In {ctx.command.qualified_name}:', file=sys.stderr)
+                traceback.print_tb(original.__traceback__)
+                print(f'{original.__class__.__name__}: {original}', file=sys.stderr)
+        elif isinstance(exception, commands.ArgumentParsingError):
+            await ctx.send(exception)
+        elif isinstance(exception, commands.errors.CommandOnCooldown):
+            await ctx.send(f"You're on cooldown, you can try again in {round(exception.retry_after)}")
 
 
 client.run(config["token"])
