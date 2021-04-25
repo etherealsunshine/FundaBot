@@ -46,6 +46,8 @@ class Miscellaneous(commands.Cog, name='Miscellaneous'):
     async def poke_error(self, ctx, error):
         if isinstance(error, commands.BadArgument):
             await ctx.send('Couldnt find that member')
+        if isinstance(error, commands.errors.CommandOnCooldown):
+            await ctx.send(f"You're on cooldown, retry after {round(error.retry_after)} seconds")
             
 def setup(bot):
     bot.add_cog(Miscellaneous(bot))
