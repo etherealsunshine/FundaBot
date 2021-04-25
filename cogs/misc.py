@@ -49,5 +49,41 @@ class Miscellaneous(commands.Cog, name='Miscellaneous'):
         if isinstance(error, commands.errors.CommandOnCooldown):
             await ctx.send(f"You're on cooldown, retry after {round(error.retry_after)} seconds")
             
+    @commands.command(name='flip')
+    async def flip(self, ctx):
+        flip_choices = ['heads', 'tails']
+        await ctx.send(f"I choose: {random.choice(flip_choices)}")
+        
+    @commands.command(name='8ball', aliases=['eight-ball', 'eightball'])
+    async def eight_ball(self, ctx, *, question):
+        responses = [
+            "It is certain.",
+            "It is decidedly so.",
+            "Without a doubt.",
+            "Yes - definitely.",
+            "You may rely on it.",
+            "As I see it, yes.",
+            "Most likely.",
+            "Outlook good.",
+            "Yes.",
+            "Signs point to yes.",
+            "Reply hazy, try again.",
+            "Ask again later.",
+            "Better not tell you now.",
+            "Cannot predict now.",
+            "Concentrate and ask again.",
+            "Don't count on it.",
+            "My reply is no.",
+            "My sources say no.",
+            "Outlook not so good.",
+            "Very doubtful."
+        ]
+        
+        await ctx.send(random.choice(responses))
+        
+    @commands.command(name='ping', aliases=['pong'])
+    async def ping(self, ctx):
+        await ctx.send(f"Pong!, latency is {round(ctx.bot.latency * 1000)}ms")
+            
 def setup(bot):
     bot.add_cog(Miscellaneous(bot))
