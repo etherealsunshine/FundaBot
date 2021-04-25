@@ -20,3 +20,6 @@ class Translate(commands.Cog, name='Translate'):
     async def translate_error(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             await ctx.send("need something to translate")
+
+def setup(bot):
+    bot.add_cog(Translate(bot))
