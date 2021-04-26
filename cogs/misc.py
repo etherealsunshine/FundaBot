@@ -38,7 +38,8 @@ class Miscellaneous(commands.Cog, name='Miscellaneous'):
             
             
     @commands.command(name='poke')
-    @commands.cooldown(1, 60, BucketType.member)
+    @commands.cooldown(1, 120, BucketType.member)
+    @commands.has_any_role(828662023666663473, 823455382549561384)
     async def poke(self, ctx, poke_member: discord.Member):
         await ctx.send(f"{ctx.author.display_name} pokes {poke_member.mention}")
         
