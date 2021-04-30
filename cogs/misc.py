@@ -105,7 +105,6 @@ class Miscellaneous(commands.Cog, name='Miscellaneous'):
                 answer = trivia_question['answer']
                 
                 await ctx.send(f"Alright here's your question, {question}\nType out your answer!")
-                await ctx.send(f"Debug answer: {answer}")
                 
                 try:
                     input = await self.bot.wait_for('message', timeout = 60.0, check = check)
@@ -116,8 +115,6 @@ class Miscellaneous(commands.Cog, name='Miscellaneous'):
                     return await ctx.send("Correct answer!")
                 else:
                     return await ctx.send(f"Incorrect answer, the right answer was: {answer}")
-                
-                
-            
+                           
 def setup(bot):
     bot.add_cog(Miscellaneous(bot))
