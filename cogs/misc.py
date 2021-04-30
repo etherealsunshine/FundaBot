@@ -1,5 +1,9 @@
+import asyncio
+import re
 import discord
 import random
+import aiohttp
+import json
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 
@@ -27,7 +31,7 @@ class Miscellaneous(commands.Cog, name='Miscellaneous'):
         await ctx.send("need more options")
         
     
-    @commands.command(name='say')
+    @commands.command(name='say', aliases = ['echo', 'repeat'])
     async def say(self, ctx, *, echo_message):
         await ctx.send(f'{ctx.author.mention}, {echo_message}')
         
@@ -47,8 +51,8 @@ class Miscellaneous(commands.Cog, name='Miscellaneous'):
     async def poke_error(self, ctx, error):
         if isinstance(error, commands.BadArgument):
             await ctx.send('Couldnt find that member')
-        if isinstance(error, commands.errors.CommandOnCooldown):
-            await ctx.send(f"You're on cooldown, retry after {round(error.retry_after)} seconds")
+        if isinstance(error, commands.MissingAnyRole):
+            await ctx.send('You don\'t have the correct role for this command')
             
     @commands.command(name='flip')
     async def flip(self, ctx):
@@ -85,6 +89,35 @@ class Miscellaneous(commands.Cog, name='Miscellaneous'):
     @commands.command(name='ping', aliases=['pong'])
     async def ping(self, ctx):
         await ctx.send(f"Pong!, latency is {round(ctx.bot.latency * 1000)}ms")
+        
+    @commands.command(name='trivia')
+    async def trivia(self, ctx):
+        await ctx.send('Im getting a question for you, please be patient')
+        
+        def check(msg):
+            return msg.author == ctx.author and msg.channel == ctx.channel
+        
+        async with aiohttp.ClientSession() as session:
+            async with session.get('https://jservice.io/api/random') as resp:
+                trivia_questions = await resp.json()
+                trivia_question = trivia_questions[0]
+                question = trivia_question['question']
+                answer = trivia_question['answer']
+                
+                await ctx.send(f"Alright here's your question, {question}\nType out your answer!")
+                await ctx.send(f"Debug answer: {answer}")
+                
+                try:
+                    input = await self.bot.wait_for('message', timeout = 60.0, check = check)
+                except asyncio.TimeoutError:
+                    return await ctx.send('You took too long!')
+                
+                if input.content.lower() == answer.lower():
+                    return await ctx.send("Correct answer!")
+                else:
+                    return await ctx.send(f"Incorrect answer, the right answer was: {answer}")
+                
+                
             
 def setup(bot):
     bot.add_cog(Miscellaneous(bot))
