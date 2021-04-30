@@ -16,12 +16,6 @@ with open("config.json", "r") as file:
 
 client = commands.Bot(command_prefix=commands.when_mentioned_or("-"), description=description,intents=intents)
 
-for filename in os.listdir('./cogs'):
-    if filename.endswith('.py'):
-        client.load_extension(f'cogs.{filename[:-3]}')
-    else:
-        print(f'Unable to load {filename[:-3]}')
-
 @tasks.loop(minutes=1)
 async def get_member_count():
     fundamics = client.get_guild(config["serverid"])
@@ -35,9 +29,10 @@ async def get_member_count():
 async def on_ready():
     get_member_count.start()
 
-    print('Logged in as')
-    print(client.user.name + "#" + client.user.discriminator)
-    print('------')
+    print('---------------------------------------------------------------------------\n')
+    print(f'Logged in as : {client.user.display_name}#{client.user.discriminator} ({client.user.id})')
+    print(f'Connected to : {len(client.guilds)} guilds\n')
+    print('---------------------------------------------------------------------------\n')
     
 @client.event
 async def on_command_error(ctx, exception):
@@ -59,6 +54,12 @@ async def on_command_error(ctx, exception):
             await ctx.send(exception)
         elif isinstance(exception, commands.errors.CommandOnCooldown):
             await ctx.send(f"You're on cooldown, you can try again in {round(exception.retry_after)}")
+            
+for filename in os.listdir('./cogs'):
+    if filename.endswith('.py'):
+        client.load_extension(f'cogs.{filename[:-3]}')
+    else:
+        print(f'Unable to load {filename[:-3]}')
 
 
 client.run(config["token"])
