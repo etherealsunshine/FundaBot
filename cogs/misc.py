@@ -6,6 +6,7 @@ import aiohttp
 import json
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
+from utils import misc
 
 class Miscellaneous(commands.Cog, name='Miscellaneous'):
     def __init__(self, bot):
@@ -103,6 +104,7 @@ class Miscellaneous(commands.Cog, name='Miscellaneous'):
                 trivia_question = trivia_questions[0]
                 question = trivia_question['question']
                 answer = trivia_question['answer']
+                clean_answer = misc.strip_tags(answer)
                 
                 await ctx.send(f"Alright here's your question, {question}\nType out your answer!")
                 
@@ -111,10 +113,10 @@ class Miscellaneous(commands.Cog, name='Miscellaneous'):
                 except asyncio.TimeoutError:
                     return await ctx.send('You took too long!')
                 
-                if input.content.lower() == answer.lower():
+                if input.content.lower() == clean_answer.lower():
                     return await ctx.send("Correct answer!")
                 else:
-                    return await ctx.send(f"Incorrect answer, the right answer was: {answer}")
+                    return await ctx.send(f"Incorrect answer, the right answer was: {clean_answer}")
                            
 def setup(bot):
     bot.add_cog(Miscellaneous(bot))
