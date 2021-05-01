@@ -5,11 +5,15 @@ from utils import conversion
 from utils import dynacalc_methods as dyna
 
 class Math(commands.Cog, name='Math'):
+    """Math related commands"""
     def __init__(self, bot):
         self.bot = bot
         
     @commands.command(name="calc", aliases=['dyna'])
     async def calc(self, ctx):
+        """Dynamic calculator
+        Allows you to type out what you wanna do and then will ask for input accordingly
+        Example: I wish to add"""
         
         def check(msg):
             return msg.author == ctx.author and msg.channel == ctx.channel

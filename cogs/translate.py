@@ -4,13 +4,15 @@ from googletrans import Translator
 
 
 class Translate(commands.Cog, name='Translate'):
+    """Translation related commands"""
     def __init__(self, bot):
         self.bot = bot
         self._translator = Translator()
 
     @commands.command(name='translate')
-    async def translate(self, ctx, *, arg):
-        output = self._translator.translate(arg)
+    async def translate(self, ctx, *, text):
+        """Translate a given piece of text to English"""
+        output = self._translator.translate(text)
         embed = discord.Embed(title='Translated', color=0xBFEDDD)
         embed.add_field(name=f'From {output.src}', value=output.origin, inline=False)
         embed.add_field(name=f'To {output.dest}', value=output.text, inline=False)

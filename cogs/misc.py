@@ -9,6 +9,7 @@ from discord.ext.commands.cooldowns import BucketType
 from utils import misc
 
 class Miscellaneous(commands.Cog, name='Miscellaneous'):
+    """A bunch of miscellaneous commands for fun"""
     def __init__(self, bot):
         self.bot = bot
     
@@ -34,7 +35,8 @@ class Miscellaneous(commands.Cog, name='Miscellaneous'):
     
     @commands.command(name='say', aliases = ['echo', 'repeat'])
     async def say(self, ctx, *, echo_message):
-        await ctx.send(f'{ctx.author.mention}, {echo_message}')
+        """repeats whatever you say"""
+        await ctx.send(f'{echo_message}')
         
     @say.error
     async def say_error(self, ctx, error):
@@ -42,7 +44,7 @@ class Miscellaneous(commands.Cog, name='Miscellaneous'):
             await ctx.send("need something to echo")
             
             
-    @commands.command(name='poke')
+    @commands.command(name='poke', hidden = True)
     @commands.cooldown(1, 120, BucketType.member)
     @commands.has_any_role(828662023666663473, 823455382549561384)
     async def poke(self, ctx, poke_member: discord.Member):
@@ -57,11 +59,15 @@ class Miscellaneous(commands.Cog, name='Miscellaneous'):
             
     @commands.command(name='flip')
     async def flip(self, ctx):
+        """Do a coin flip"""
         flip_choices = ['heads', 'tails']
         await ctx.send(f"I choose: {random.choice(flip_choices)}")
         
     @commands.command(name='8ball', aliases=['eight-ball', 'eightball'])
     async def eight_ball(self, ctx, *, question):
+        """Consult the magic Eight Ball
+        Usage: -8ball your question
+        """
         responses = [
             "It is certain.",
             "It is decidedly so.",
@@ -89,10 +95,16 @@ class Miscellaneous(commands.Cog, name='Miscellaneous'):
         
     @commands.command(name='ping', aliases=['pong'])
     async def ping(self, ctx):
+        """Play a game of ping pong
+        Use this to check if the bot is alive
+        Also provides latency"""
         await ctx.send(f"Pong!, latency is {round(ctx.bot.latency * 1000)}ms")
         
     @commands.command(name='trivia')
     async def trivia(self, ctx):
+        """Answer a randomly selected trivia question
+        FundaBot gets a question and you have to type out the answer
+        """
         await ctx.send('Im getting a question for you, please be patient')
         
         def check(msg):
