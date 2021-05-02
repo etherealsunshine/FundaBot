@@ -43,20 +43,6 @@ class Miscellaneous(commands.Cog, name='Miscellaneous'):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             await ctx.send("need something to echo")
             
-            
-    @commands.command(name='poke', hidden = True)
-    @commands.cooldown(1, 120, BucketType.member)
-    @commands.has_any_role(828662023666663473, 823455382549561384)
-    async def poke(self, ctx, poke_member: discord.Member):
-        await ctx.send(f"{ctx.author.display_name} pokes {poke_member.mention}")
-        
-    @poke.error
-    async def poke_error(self, ctx, error):
-        if isinstance(error, commands.BadArgument):
-            await ctx.send('Couldnt find that member')
-        if isinstance(error, commands.MissingAnyRole):
-            await ctx.send('You don\'t have the correct role for this command')
-            
     @commands.command(name='flip')
     async def flip(self, ctx):
         """Do a coin flip"""
