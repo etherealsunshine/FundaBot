@@ -1,7 +1,7 @@
 import asyncio
 from os import error
 from discord.ext import commands
-from utils import conversion
+from utils import misc
 from utils import dynacalc_methods as dyna
 
 class Math(commands.Cog, name='Math'):
@@ -32,7 +32,7 @@ class Math(commands.Cog, name='Math'):
             except asyncio.TimeoutError:
                 return await ctx.send('You took too long!')
             
-            if conversion.check_number(num_amount.clean_content) == False:
+            if misc.check_number(num_amount.clean_content) == False:
                 return await ctx.send("Not a valid input, retry the command!")
             
             nums = []
@@ -42,7 +42,7 @@ class Math(commands.Cog, name='Math'):
                 try:
                     num = await self.bot.wait_for('message', timeout = 60.0, check = check)
                     
-                    if conversion.check_number(num.clean_content) == False:
+                    if not misc.check_number(num.clean_content):
                         return await ctx.send("Not a valid input, retry the command!")
                 except asyncio.TimeoutError:
                     return await ctx.send('You took too long!')
@@ -58,7 +58,7 @@ class Math(commands.Cog, name='Math'):
             except asyncio.TimeoutError:
                 return await ctx.send('You took too long!')
             
-            if conversion.check_number(num_amount.clean_content) == False:
+            if not misc.check_number(num_amount.clean_content):
                 return await ctx.send("Not a valid input, retry the command!")
             
             nums = []
@@ -68,7 +68,7 @@ class Math(commands.Cog, name='Math'):
                 try:
                     num = await self.bot.wait_for('message', timeout = 60.0, check = check)
                     
-                    if conversion.check_number(num.clean_content) == False:
+                    if not misc.check_number(num.clean_content):
                         return await ctx.send("Not a valid input, retry the command!")
                 except asyncio.TimeoutError:
                     return await ctx.send('You took too long!')
@@ -84,7 +84,7 @@ class Math(commands.Cog, name='Math'):
             except asyncio.TimeoutError:
                 return await ctx.send('You took too long!')
             
-            if conversion.check_number(num_amount.clean_content) == False:
+            if not misc.check_number(num_amount.clean_content):
                 return await ctx.send("Not a valid input, retry the command!")
             
             nums = []
@@ -94,7 +94,7 @@ class Math(commands.Cog, name='Math'):
                 try:
                     num = await self.bot.wait_for('message', timeout = 60.0, check = check)
                     
-                    if conversion.check_number(num.clean_content) == False:
+                    if not misc.check_number(num.clean_content):
                         return await ctx.send("Not a valid input, retry the command!")
                 except asyncio.TimeoutError:
                     return await ctx.send('You took too long!')
@@ -109,7 +109,7 @@ class Math(commands.Cog, name='Math'):
                 await ctx.send("Enter the dividend")
                 x_input = await self.bot.wait_for('message', timeout = 60.0, check = check)
                 
-                if conversion.check_number(x_input.clean_content) == False:
+                if not misc.check_number(x_input.clean_content):
                     return await ctx.send("Not a valid input, try again!")
                 
                 x = int(x_input.clean_content.lower())
@@ -120,12 +120,12 @@ class Math(commands.Cog, name='Math'):
                 await ctx.send("Enter the divisor")
                 y_input = await self.bot.wait_for('message', timeout=60.0, check=check)
 
-                if conversion.check_number(x_input.clean_content) == False:
+                if not misc.check_number(y_input.clean_content):
                     return await ctx.send("Not a valid input, try again!")
 
                 y = int(y_input.clean_content.lower())
                 
-                if conversion.is_zero(y):
+                if misc.is_zero(y):
                     return await ctx.send("Cannot divide by zero!")
             except asyncio.TimeoutError:
                 return await ctx.send("You took too long!")
