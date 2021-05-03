@@ -6,7 +6,7 @@ import aiohttp
 import json
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
-from utils import misc
+from utils import misc, formatter
 
 class Miscellaneous(commands.Cog, name='Miscellaneous'):
     """A bunch of miscellaneous commands for fun"""
@@ -115,6 +115,24 @@ class Miscellaneous(commands.Cog, name='Miscellaneous'):
                     return await ctx.send("Correct answer!")
                 else:
                     return await ctx.send(f"Incorrect answer, the right answer was: {clean_answer}")
+                
+    @commands.command(name='fundachannelsort', hidden=True)
+    @commands.is_owner()
+    async def fundachannelsort(self, ctx):
+        fundamics = self.bot.get_guild(815595847135395880)
+        groups = fundamics.get_channel(815952796883877928)
+        channels = []
+        for channel in groups.text_channels:
+            channels.append(channel.name)
+        
+        channels.sort()
+        output = formatter.quote_list(channels)
+        await ctx.send(output)
+        
+    @fundachannelsort.error
+    async def sorter_error(self, ctx, error):
+        if isinstance(error, commands.errors.NotOwner):
+            await ctx.send("You're not shift-eleven#7304")
                            
 def setup(bot):
     bot.add_cog(Miscellaneous(bot))
