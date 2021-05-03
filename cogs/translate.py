@@ -33,6 +33,7 @@ class Translate(commands.Cog, name='Translate'):
             
     @commands.command(name='languages')
     async def languages(self, ctx):
+        """Get a list of languages for translation"""
         langs = misc.get_languages()
         lang_output = formatter.quote_list(langs)
         embed = discord.Embed(title='Translation Languages', color=0xBFEDDD, description=lang_output)
