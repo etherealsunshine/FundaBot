@@ -8,8 +8,7 @@ description = '''
 A bot dedicated to helping the members of the Fundamics community
 '''
 
-intents = discord.Intents.default()
-intents.members = True
+intents = discord.Intents.all()
 
 with open("config.json", "r") as file:
     config = json.load(file)
