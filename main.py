@@ -7,7 +7,6 @@ import traceback
 description = '''
 A bot dedicated to helping the members of the Fundamics community
 '''
-
 intents = discord.Intents.all()
 
 with open("config.json", "r") as file:
@@ -27,7 +26,7 @@ async def get_member_count():
 @client.event
 async def on_ready():
     get_member_count.start()
-
+    
     print('---------------------------------------------------------------------------\n')
     print(f'Logged in as : {client.user.display_name}#{client.user.discriminator} ({client.user.id})')
     print(f'Connected to : {len(client.guilds)} guilds\n')
@@ -37,7 +36,7 @@ for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         client.load_extension(f'cogs.{filename[:-3]}')
     else:
-        print(f'Unable to load {filename[:-3]}')
+        print(f'Unable to load {filename[:-3]}')        
         
 
 @client.event
