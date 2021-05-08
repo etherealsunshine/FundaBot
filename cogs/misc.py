@@ -140,6 +140,7 @@ class Miscellaneous(commands.Cog, name='Miscellaneous'):
         poll_message = await ctx.send(question)
         await poll_message.add_reaction("👍")
         await poll_message.add_reaction("👎")
+        await poll_message.add_reaction("🤷")
         
     @poll.error
     async def poll_error(self, ctx, error):
