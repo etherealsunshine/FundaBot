@@ -3,21 +3,71 @@ from discord.ext import commands, tasks
 import json
 import os, sys
 import traceback
+from chatterbot import ChatBot
+from chatterbot.trainers import ChatterBotCorpusTrainer, ListTrainer
+from utils import chat_utils
 
 description = '''
 A bot dedicated to helping the members of the Fundamics community
 '''
 intents = discord.Intents.all()
 
+
+chatbot = ChatBot(
+    "FundaBot",
+    logic_adapters=[
+        {
+            'import_path': 'chatterbot.logic.BestMatch',
+            'statement_comparison_function': 'chatterbot.comparisons.levenshtein_distance'
+        }
+    ],
+    preprocessors=[
+        'chatterbot.preprocessors.clean_whitespace'
+    ],
+    filters=[
+        'chatterbot.filters.RepetitiveResponseFilter'
+    ],
+    input_adapter='chatterbot.input.VariableInputTypeAdapter',
+    output_adapter="chatterbot.output.OutputAdapter",
+    output_format="text",)
+
+
+trainer = ChatterBotCorpusTrainer(chatbot)
+
+list_trainer = ListTrainer(chatbot)
+
+trainer.train(
+    'chatterbot.corpus.english.'
+)
+
+list_trainer.train(chat_utils.base_data)
+list_trainer.train(chat_utils.movie_data)
+list_trainer.train(chat_utils.thing_data)
+
 with open("config.json", "r") as file:
     config = json.load(file)
 
-client = commands.Bot(command_prefix=commands.when_mentioned_or("-"), description=description,intents=intents)
+client = commands.Bot(command_prefix="-", description=description,intents=intents)
+
+fundachannel_id = 834066741076295750
+blackrose_id = 840432756600209428
+
+
+@client.listen('on_message')
+async def on_message(message):
+    if message.author.bot:
+        return
+    if message.channel.id != blackrose_id:
+        return
+    query_string = message.content
+    response = chatbot.get_response(query_string)
+    await message.channel.send(response)
+
 
 @tasks.loop(minutes=1)
 async def get_member_count():
     fundamics = client.get_guild(config["serverid"])
-    count = len([s for s in fundamics.members if s.bot != True])
+    count = len([s for s in fundamics.members if not s.bot])
     
     game = discord.Game(f"-help | Watching {count} members")
     await client.change_presence(status=discord.Status.idle, activity=game)
