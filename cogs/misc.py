@@ -133,6 +133,19 @@ class Miscellaneous(commands.Cog, name='Miscellaneous'):
     async def sorter_error(self, ctx, error):
         if isinstance(error, commands.errors.NotOwner):
             await ctx.send("You're not shift-eleven#7304")
+            
+    @commands.command(name='poll')
+    async def poll(self, ctx, *, question):
+        await ctx.message.delete()
+        poll_message = await ctx.send(question)
+        await poll_message.add_reaction("👍")
+        await poll_message.add_reaction("👎")
+        
+    @poll.error
+    async def poll_error(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRequiredArgument):
+            await ctx.send("Need a poll question")
+        
                            
 def setup(bot):
     bot.add_cog(Miscellaneous(bot))
