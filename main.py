@@ -46,6 +46,8 @@ trainer.train('chatterbot.corpus.english.')
 list_trainer.train(chat_utils.base_data)
 list_trainer.train(chat_utils.movie_data)
 list_trainer.train(chat_utils.thing_data)
+list_trainer.train(chat_utils.name_data)
+list_trainer.train(chat_utils.gender_data)
 
 
 async def get_response(input):
