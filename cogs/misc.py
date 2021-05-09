@@ -1,8 +1,9 @@
 import asyncio
 import random
 import aiohttp
+import discord
 from discord.ext import commands
-from utils import misc, formatter
+from utils import misc, formatter, meta
 
 class Miscellaneous(commands.Cog, name='Miscellaneous'):
     """A bunch of miscellaneous commands for fun"""
@@ -142,6 +143,16 @@ class Miscellaneous(commands.Cog, name='Miscellaneous'):
     async def poll_error(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             await ctx.send("Need a poll question")
+            
+    @commands.command(name='info', aliases=['meta'])
+    async def info(self, ctx):
+        embed = discord.Embed(title=f'Info about {self.bot.user.name}', color=meta.embed_color)
+        embed.add_field(name='Language', value="Python", inline=False)
+        embed.add_field(name="Source", value=formatter.mark_down_link("On Github", meta.GIT_REPO), inline=False)
+        embed.add_field(name=f"discord.py Version {meta.LIB_VERSION}", value=formatter.mark_down_link("Source", meta.LIB_REPO), inline=False)
+        embed.set_footer(text="made by shift-eleven#7304")
+        
+        await ctx.send(embed=embed)
         
                            
 def setup(bot):
