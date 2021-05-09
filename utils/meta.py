@@ -3,6 +3,10 @@ from discord.ext import commands
 
 embed_color = 0xBFEDDD
 
+GIT_REPO = "https://github.com/shift-eleven/FundaBot"
+LIB_REPO = "https://github.com/Rapptz/discord.py"
+LIB_VERSION = discord.__version__
+
 class FundaHelp(commands.HelpCommand):
     def get_command_signature(self, command):
         return '%s%s %s' % (self.clean_prefix, command.qualified_name, command.signature)
