@@ -7,6 +7,10 @@ from chatterbot import ChatBot
 from chatterbot.trainers import ChatterBotCorpusTrainer, ListTrainer
 from utils import chat_utils
 
+# top level global variables
+fundachannel_id = 834066741076295750
+blackrose_id = 840618751648595978
+
 description = '''
 A bot dedicated to helping the members of the Fundamics community
 '''
@@ -29,29 +33,29 @@ chatbot = ChatBot(
     ],
     input_adapter='chatterbot.input.VariableInputTypeAdapter',
     output_adapter="chatterbot.output.OutputAdapter",
-    output_format="text",)
+    output_format="text",
+)
 
 
 trainer = ChatterBotCorpusTrainer(chatbot)
-
 list_trainer = ListTrainer(chatbot)
 
-trainer.train(
-    'chatterbot.corpus.english.'
-)
 
+trainer.train('chatterbot.corpus.english.')
 list_trainer.train(chat_utils.base_data)
 list_trainer.train(chat_utils.movie_data)
 list_trainer.train(chat_utils.thing_data)
 
+
 with open("config.json", "r") as file:
     config = json.load(file)
 
+
 client = commands.Bot(command_prefix="-", description=description,intents=intents)
 
-fundachannel_id = 834066741076295750
-blackrose_id = 840432756600209428
 
+async def get_response(input):
+    return chatbot.get_response(input)
 
 @client.listen('on_message')
 async def on_message(message):
@@ -59,8 +63,10 @@ async def on_message(message):
         return
     if message.channel.id != blackrose_id:
         return
+    if message.content == None:
+        return
     query_string = message.content
-    response = chatbot.get_response(query_string)
+    response = await get_response(query_string)
     await message.channel.send(response)
 
 
