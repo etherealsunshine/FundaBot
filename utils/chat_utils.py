@@ -209,3 +209,15 @@ base_data = [
     'That is weird',
     'Yeah it kind of is',
 ]
+
+name_data = [
+    'what is your name?',
+    'my name is fundabot, whats yours?',
+]
+
+gender_data = [
+    'what is your gender',
+    'i am non binary',
+    'what is that',
+    'Non-binary or genderqueer is an umbrella term for gender identities that are neither male nor female identities that are outside the gender binary',
+]
