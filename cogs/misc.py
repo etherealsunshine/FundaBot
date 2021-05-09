@@ -1,11 +1,7 @@
 import asyncio
-import re
-import discord
 import random
 import aiohttp
-import json
 from discord.ext import commands
-from discord.ext.commands.cooldowns import BucketType
 from utils import misc, formatter
 
 class Miscellaneous(commands.Cog, name='Miscellaneous'):

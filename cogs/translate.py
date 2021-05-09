@@ -1,7 +1,8 @@
 import discord
 from discord.ext import commands
 from googletrans import Translator
-from utils import misc, formatter
+from utils import formatter
+from utils import translation_utils as translation
 
 
 class Translate(commands.Cog, name='Translate'):
@@ -12,13 +13,14 @@ class Translate(commands.Cog, name='Translate'):
 
     @commands.command(name='translate')
     async def translate(self, ctx, language, *, text):
-        """Translate text into english"""
+        """Translate text into a language of your choices
+        Call `-languages` to get a list of languages for translation"""
         check_language = language.lower()
         
-        if not misc.check_language(check_language):
+        if not translation.check_language(check_language):
             return await ctx.send(f"Sorry, but {language} doesn't seem to be a valid language for translation, try `-languages` to get a list of translation languages")
         
-        dest = misc.get_language_code(check_language)
+        dest = translation.get_language_code(check_language)
         
         output = self._translator.translate(text, dest=dest)
         embed = discord.Embed(title='Translated', color=0xBFEDDD)
@@ -34,7 +36,7 @@ class Translate(commands.Cog, name='Translate'):
     @commands.command(name='languages')
     async def languages(self, ctx):
         """Get a list of languages for translation"""
-        langs = misc.get_languages()
+        langs = translation.get_languages()
         lang_output = formatter.quote_list(langs)
         embed = discord.Embed(title='Translation Languages', color=0xBFEDDD, description=lang_output)
         await ctx.send(embed=embed)

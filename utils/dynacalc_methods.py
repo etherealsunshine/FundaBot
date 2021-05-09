@@ -18,3 +18,18 @@ def multiply(nums):
 
 def divide(x, y):
     return x / y
+
+def check_number(input):
+    try:
+        int(input)
+        return True
+    except ValueError:
+        try:
+            float(input)
+            return True
+        except ValueError:
+            return False
+
+
+def is_zero(input):
+    return input == 0
