@@ -1,3 +1,4 @@
+import chatterbot
 import discord
 from discord.ext import commands, tasks
 import json
@@ -5,10 +6,11 @@ import os, sys
 import traceback
 from chatterbot import ChatBot
 from chatterbot.trainers import ChatterBotCorpusTrainer, ListTrainer
+import chatterbot.response_selection
 from utils import chat_utils, meta
 
 # top level global variables
-fundachannel_id = 834066741076295750
+funda_id = 834066741076295750
 blackrose_id = 840618751648595978
 
 description = '''
@@ -16,20 +18,21 @@ A bot dedicated to helping the members of the Fundamics community
 '''
 intents = discord.Intents.all()
 
+message_queue = []
 
 chatbot = ChatBot(
     "FundaBot",
     logic_adapters=[
         {
             'import_path': 'chatterbot.logic.BestMatch',
-            'statement_comparison_function': 'chatterbot.comparisons.levenshtein_distance'
+            'statement_comparison_function': 'chatterbot.comparisons.levenshtein_distance',
         }
     ],
     preprocessors=[
         'chatterbot.preprocessors.clean_whitespace'
     ],
     filters=[
-        'chatterbot.filters.RepetitiveResponseFilter'
+        'chatterbot.filters.get_recent_repeated_responses'
     ],
     input_adapter='chatterbot.input.VariableInputTypeAdapter',
     output_adapter="chatterbot.output.OutputAdapter",
@@ -69,7 +72,7 @@ async def on_message(message):
         return
     query_string = message.content
     response = await get_response(query_string)
-    await message.channel.send(response)
+    await message.reply(response, mention_author=False)
 
 
 @tasks.loop(minutes=1)
@@ -94,7 +97,12 @@ for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         client.load_extension(f'cogs.{filename[:-3]}')
     else:
-        print(f'Unable to load {filename[:-3]}')        
+        print(f'Unable to load {filename[:-3]}') 
+        
+               
+@client.event
+async def on_disconnect():
+    get_member_count.stop()
         
 
 @client.event
