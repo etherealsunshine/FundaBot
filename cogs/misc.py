@@ -132,9 +132,11 @@ class Miscellaneous(commands.Cog, name='Miscellaneous'):
             await ctx.send("You're not shift-eleven#7304")
             
     @commands.command(name='poll')
-    async def poll(self, ctx, *, question):
+    async def poll(self, ctx : commands.Context, *, question):
         await ctx.message.delete()
-        poll_message = await ctx.send(question)
+        poll_embed = discord.Embed(title="Poll!", description=question, color=meta.embed_color)
+        poll_embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        poll_message = await ctx.send(embed=poll_embed)
         await poll_message.add_reaction("👍")
         await poll_message.add_reaction("👎")
         await poll_message.add_reaction("🤷")
