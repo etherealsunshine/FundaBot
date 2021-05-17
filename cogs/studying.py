@@ -24,6 +24,9 @@ class Studying(commands.Cog):
         
     @commands.command(name='studying')
     async def is_studying(self, ctx : commands.Context):
+        """Mark yourself as studying
+        Allows you to access the studying voice channels
+        Call the command again to remove the studying role"""
         studying_role = ctx.guild.get_role(834800433046224937)
         if studying_role in ctx.author.roles:
             await ctx.author.remove_roles(studying_role)
